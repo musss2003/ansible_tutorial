@@ -1,3 +1,14 @@
-[all]
+[web]
 192.168.56.101
+
+[monitoring]
+192.168.56.101
+
+[all_hosts:children]
+web
+monitoring
+
+[all_hosts:vars]
+ansible_user=devasc
+ansible_python_interpreter=/usr/bin/python3.8
 
