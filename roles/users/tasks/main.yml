@@ -1,0 +1,21 @@
+---
+- name: Create basic users
+  user:
+    name: "{{ item }}"
+    shell: /bin/bash
+    state: present
+  loop:
+    - devuser1
+    - devuser2
+    - devuser3
+
+- name: Create advanced structured users
+  user:
+    name: "{{ item.name }}"
+    shell: "{{ item.shell }}"
+    groups: "{{ item.groups }}"
+    state: present
+  loop:
+    - { name: "devops", shell: "/bin/bash", groups: "sudo" }
+    - { name: "tester", shell: "/bin/false", groups: "" }
+    - { name: "deploy", shell: "/bin/bash", groups: "www-data" }

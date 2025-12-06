@@ -1,0 +1,8 @@
+---
+- hosts: all_hosts
+  become: yes
+
+  roles:
+    - web
+    - users
+    - tools
