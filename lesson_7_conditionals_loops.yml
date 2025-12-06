@@ -1,0 +1,69 @@
+---
+- hosts: all_hosts
+  become: yes
+
+  tasks:
+
+    # ================================
+    # 1. OS-BASED PACKAGE INSTALLATION
+    # ================================
+
+    - name: Install NGINX on Ubuntu/Debian
+      apt:
+        name: nginx
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install HTTPD on RedHat systems
+      yum:
+        name: httpd
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    # ================================
+    # 2. SIMPLE LOOP (MULTIPLE PACKAGES)
+    # ================================
+
+    - name: Install useful tools with loop
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - htop
+        - curl
+        - git
+        - vim
+      when:
+        - ansible_os_family == "Debian"
+        - install_tools
+
+    # ================================
+    # 3. SIMPLE USER LOOP
+    # ================================
+
+    - name: Create basic users with loop
+      user:
+        name: "{{ item }}"
+        shell: /bin/bash
+        state: present
+      loop:
+        - devuser1
+        - devuser2
+        - devuser3
+      when: create_users
+
+    # ================================
+    # 4. ADVANCED LOOP WITH STRUCTURE
+    # ================================
+
+    - name: Create advanced structured users
+      user:
+        name: "{{ item.name }}"
+        shell: "{{ item.shell }}"
+        groups: "{{ item.groups }}"
+        state: present
+      loop:
+        - { name: "devops", shell: "/bin/bash", groups: "sudo" }
+        - { name: "tester", shell: "/bin/false", groups: "" }
+        - { name: "deploy", shell: "/bin/bash", groups: "www-data" }
+      when: create_users
